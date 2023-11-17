@@ -1,0 +1,18 @@
+﻿@model IEnumerable<n01593039Assigment3.Models.Class1>
+@{
+    ViewBag.Title = "List";
+}
+
+<h2>Display Classes List</h2>
+@{
+    foreach (n01593039Assigment3.Models.Class1 Class in Model)
+    {
+        <div>
+            <a href="/Class/Show/@Class.ClassId">
+                @Class.Classname
+            </a>
+        </div>
+    }
+}
+
+

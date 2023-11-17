@@ -1,0 +1,35 @@
+﻿
+@using n01593039Assigment3.ViewModels
+@model TeacherCourseViewModel
+@{
+    ViewBag.Title = "Show";
+
+}
+
+<h2>Show Teacher Information</h2>
+
+<div id="infor">
+    <p>Teacher Fullname: @Model.TeacherCourses.TeacherFname @Model.TeacherCourses.TeacherLname </p>
+    <p>Employee Number: @Model.TeacherCourses.TeacherNumber</p>
+    <p>Salary: @Model.TeacherCourses.TeacherSalary</p>
+    <p>Hire Date: @Model.TeacherCourses.Hiredate</p>
+</div>
+<h2>Courses</h2>
+<table>
+    <tr>
+        <th>Class Code</th>
+        <th>Class Name</th>
+    </tr>
+    @{
+        foreach (var Class in Model.Classes)
+        {
+
+            <tr>
+                <td>@Class.Classcode</td>
+                <td>@Class.Classname</td>
+            </tr>
+
+        }
+
+    }
+</table>
