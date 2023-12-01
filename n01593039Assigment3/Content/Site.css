@@ -34,3 +34,12 @@ td, th {
 tr:nth-child(even) {
     background-color: #dddddd;
 }
+div#block{
+    margin: 5px 0 5px 0;
+}
+#label{
+    margin-right:57px;
+}
+#label1{
+    margin-right:89px;
+}
