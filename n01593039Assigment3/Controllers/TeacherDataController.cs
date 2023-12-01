@@ -9,6 +9,8 @@ using System.Net.Http;
 using System.Web.Http;
 using System.Diagnostics;
 using System.Globalization;
+using System.Web.Http.Cors;
+
 
 namespace n01593039Assigment3.Controllers
 {
@@ -22,9 +24,13 @@ namespace n01593039Assigment3.Controllers
         /// </summary>
         /// <example>GET api/TeacherData/ListTeachers</example>
         /// <returns>
-        /// A list of teachers
+        /// A list of teachers with teacher name containing the search key
         /// </returns>
-        /// <param name="SearchKey"">The articles to search for</param>
+        /// <param name="SearchKey"">The search for teacher information</param>
+        /// <example>
+        /// GET: api/TeacherData/ListTeacher/alexander->
+        ///{"TeacherFname":"Alexander"; "TeacherLname":" Bennet"}
+        /// </example>
 
         [HttpGet]
         [Route("api/TeacherData/ListTeachers/{SearchKey?}")]
@@ -58,6 +64,7 @@ namespace n01593039Assigment3.Controllers
                 string TeacherNumber = ResultSet["employeenumber"].ToString();
                 //get teacher hire date
                 string HireDate = ResultSet["hiredate"].ToString();
+                var hdate = DateTime.Parse(HireDate);
                 // get teacher salary
                 decimal TeacherSalary = (decimal)ResultSet["salary"];
                 //create a teacher object
@@ -66,7 +73,7 @@ namespace n01593039Assigment3.Controllers
                 NewTeacher.TeacherFname = TeacherFname;
                 NewTeacher.TeacherLname = TeacherLname;
                 NewTeacher.TeacherNumber = TeacherNumber;
-                NewTeacher.Hiredate = HireDate;
+                NewTeacher.Hiredate = hdate;
                 NewTeacher.TeacherSalary = TeacherSalary;
                 //add teacher name to the list
                 TeacherNames.Add(NewTeacher);
@@ -171,10 +178,10 @@ namespace n01593039Assigment3.Controllers
                 TeacherCourses.TeacherNumber = ResultSet["employeenumber"].ToString();
                 //get hire date
                 TeacherCourses.Hiredate = ResultSet["hiredate"].ToString();
-                string Hdate = ResultSet["hiredate"].ToString();
+                //string Hdate = ResultSet["hiredate"].ToString();
                 //Debug.WriteLine(date);
                 //var date1 = "2023-11-16 02:22:22 AM";
-                DateTime datetime = DateTime.ParseExact(Hdate,"yyyy-MM-dd hh:mm:ss tt",CultureInfo.InvariantCulture);
+                DateTime datetime = DateTime.ParseExact(TeacherCourses.Hiredate,"yyyy-MM-dd hh:mm:ss tt",CultureInfo.InvariantCulture);
                 //Debug.WriteLine(datetime);
                 TeacherCourses.Hiredate = datetime.ToString("yyyy-MM-dd") ;
 
@@ -188,6 +195,80 @@ namespace n01593039Assigment3.Controllers
 
 
             return TeacherCourses;
+        }
+
+        //new method in the teacher data controller
+        /// <summary>
+        /// Receives a new teacher information and adds the teacher to the database
+        /// </summary>
+        /// <example>
+        /// POST:api/TeacherData/AddTeacher
+        /// 
+        /// FORM DATA/ POST DATA:
+        /// {
+        /// "TeacherFname": "Jemi",
+        /// "TeacherLname": "Choi",
+        /// "EmployeeNumber": "T290",
+        /// "Salary":"50,55"
+        /// }
+        /// </example>
+        /// <returns></returns>
+        /// After add, delete, we will focus on the API directly
+        [HttpPost]
+        [EnableCors(origins:"*",methods:"*",headers:"*")]
+        public string AddTeacher(Teacher NewTeacher)
+        {
+            // assume that the information is received correctly
+            //contact the database and execute a query
+            //what kind of query that we need to include?
+            // insert into teachers (teacherid, teacherfname, teacherlname, employeenumber,salary)
+            // values(0,'Jemi','Choi','T290','2023-11-27','50.55')
+
+            MySqlConnection Conn = School.AccessDatabase();
+            Conn.Open();
+            MySqlCommand CMD = Conn.CreateCommand();
+
+            string query = "insert into teachers (teacherid, teacherfname, teacherlname, employeenumber,hiredate, salary) " +
+                "values(0,@teacherfname,@teacherlname,@employeenumber,CURRENT_DATE(),@salary)";
+            CMD.CommandText = query;
+            CMD.Parameters.AddWithValue("@teacherfname",NewTeacher.TeacherFname);
+            CMD.Parameters.AddWithValue("@teacherlname",NewTeacher.TeacherLname);
+            CMD.Parameters.AddWithValue("@employeenumber",NewTeacher.TeacherNumber);
+            CMD.Parameters.AddWithValue ("@salary",NewTeacher.TeacherSalary);
+
+            CMD.Prepare();
+            CMD.ExecuteNonQuery();
+            Conn.Close();
+
+
+            // how do i put the new teacher information to this query
+            return "add";
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="TeacherId"></param>
+        /// <example>POST: /api/TeacherData/DeleteTeacher/3</example>
+        // a new method for deleting a teacher
+        [HttpPost]
+        [Route("api/TeacherData/DeleteTeacher/{TeacherId}")]
+        [EnableCors(origins: "*", methods: "*", headers: "*")]
+        public void DeleteTeacher(int TeacherId)
+        {
+            // create an instance of a connection
+            MySqlConnection Conn = School.AccessDatabase();
+            // open the connection between database and server
+            Conn.Open();
+            // Establish a new command (query) for our database
+            MySqlCommand cmd = Conn.CreateCommand();
+
+            //SQL query
+            cmd.CommandText = "DELETE teachers,classes FROM teachers JOIN classes ON teachers.teacherid=classes.teacherid " +
+                "WHERE teachers.teacherid=@id and classes.teacherid=@id";
+            cmd.Parameters.AddWithValue("@id",TeacherId);
+            cmd.Prepare();
+            cmd.ExecuteNonQuery();
+            Conn.Close();
         }
     }
 }

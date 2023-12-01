@@ -9,7 +9,7 @@ namespace n01593039Assigment3.Controllers
 {
     public class ClassController : Controller
     {
-        // GET: Class1/List
+        // GET: Class/List
         // Go to Views/Class/List.cshtml
         // Browser open classes list page
         public ActionResult List()
@@ -23,7 +23,7 @@ namespace n01593039Assigment3.Controllers
 
             return View(Classes);
         }
-        //GET Class1/Show/{id}
+        //GET Class/Show/{id}
         //Route to Views/Class/Show.cshtml
         public ActionResult Show(int id)
         {

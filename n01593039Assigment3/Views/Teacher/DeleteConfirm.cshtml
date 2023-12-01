@@ -1,0 +1,14 @@
+﻿@using n01593039Assigment3.ViewModels
+@model TeacherCourseViewModel
+@{
+    ViewBag.Title = "DeleteConfirm";
+}
+
+<h2>Are you sure you want to delete this Teacher?</h2>
+
+<p>Teacher Fullname: @Model.TeacherCourses.TeacherFname @Model.TeacherCourses.TeacherLname </p>
+<p>Employee Number: @Model.TeacherCourses.TeacherNumber</p>
+<form action="/Teacher/Delete/@Model.TeacherCourses.TeacherId" method="POST">
+<input type="submit" value="Confirm Delete">
+ </form>
+

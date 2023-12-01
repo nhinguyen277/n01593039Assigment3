@@ -17,7 +17,7 @@ namespace n01593039Assigment3.Models
         // teacher number
         public string TeacherNumber { get; set; }
         // Teacher hire day
-        public string Hiredate { get; set; }
+        public DateTime Hiredate { get; set; }
         // teacher salary
         public decimal TeacherSalary { get; set; }
 
