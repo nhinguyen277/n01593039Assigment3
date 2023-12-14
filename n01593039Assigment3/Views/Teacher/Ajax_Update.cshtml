@@ -1,0 +1,41 @@
+﻿@model n01593039Assigment3.Models.TeacherCourse
+@{
+    ViewBag.Title = "Ajax_Update";
+}
+
+<h2>Ajax Update A Teacher Information</h2>
+
+
+    <div class="inputrow">
+        <label>First Name:</label>
+        <input type="text" id="TeacherFname" name="TeacherFname" value="@Model.TeacherFname" />
+
+    </div>
+    <div class="inputrow">
+        <label>Last Name:</label>
+        <input type="text" id="TeacherLname" name="TeacherLname" value="@Model.TeacherLname" />
+
+    </div>
+    <div class="inputrow">
+        <label>Employee Number:</label>
+        <input type="text" id="Teacherumber" name="TeacherNumber" value="@Model.TeacherNumber" />
+    </div>
+    <div class="inputrow">
+        <label>Salary:</label>
+
+        <input id="TeacherSalary" name="TeacherSalary" value="@Model.TeacherSalary" />
+
+    </div>
+    <div class="inputrow">
+        <label>Hire Date:</label>
+
+        <input id="Hiredate" name="Hiredate" value="@Model.Hiredate" />
+
+    </div>
+
+        @{
+            //AddTeacher() is a JS method defined in /Scripts/teachers.js
+        }
+        <button onclick="UpdateTeacher(@Model.TeacherId);">Update Teacher</button>
+
+

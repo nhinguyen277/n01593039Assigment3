@@ -209,7 +209,7 @@ namespace n01593039Assigment3.Controllers
         /// "TeacherFname": "Jemi",
         /// "TeacherLname": "Choi",
         /// "EmployeeNumber": "T290",
-        /// "Salary":"50,55"
+        /// "Salary":"50.55"
         /// }
         /// </example>
         /// <returns></returns>
@@ -229,12 +229,13 @@ namespace n01593039Assigment3.Controllers
             MySqlCommand CMD = Conn.CreateCommand();
 
             string query = "insert into teachers (teacherid, teacherfname, teacherlname, employeenumber,hiredate, salary) " +
-                "values(0,@teacherfname,@teacherlname,@employeenumber,CURRENT_DATE(),@salary)";
+                "values(0,@teacherfname,@teacherlname,@employeenumber,@hiredate,@salary)";
             CMD.CommandText = query;
             CMD.Parameters.AddWithValue("@teacherfname",NewTeacher.TeacherFname);
             CMD.Parameters.AddWithValue("@teacherlname",NewTeacher.TeacherLname);
             CMD.Parameters.AddWithValue("@employeenumber",NewTeacher.TeacherNumber);
             CMD.Parameters.AddWithValue ("@salary",NewTeacher.TeacherSalary);
+            CMD.Parameters.AddWithValue("@hiredate", NewTeacher.Hiredate);
 
             CMD.Prepare();
             CMD.ExecuteNonQuery();
@@ -242,7 +243,7 @@ namespace n01593039Assigment3.Controllers
 
 
             // how do i put the new teacher information to this query
-            return "add";
+            return "added teacher";
         }
         /// <summary>
         /// 
@@ -251,8 +252,9 @@ namespace n01593039Assigment3.Controllers
         /// <example>POST: /api/TeacherData/DeleteTeacher/3</example>
         // a new method for deleting a teacher
         [HttpPost]
-        [Route("api/TeacherData/DeleteTeacher/{TeacherId}")]
         [EnableCors(origins: "*", methods: "*", headers: "*")]
+        [Route("api/TeacherData/DeleteTeacher/{TeacherId}")]
+        
         public void DeleteTeacher(int TeacherId)
         {
             // create an instance of a connection
@@ -263,12 +265,59 @@ namespace n01593039Assigment3.Controllers
             MySqlCommand cmd = Conn.CreateCommand();
 
             //SQL query
-            cmd.CommandText = "DELETE teachers,classes FROM teachers JOIN classes ON teachers.teacherid=classes.teacherid " +
-                "WHERE teachers.teacherid=@id and classes.teacherid=@id";
+            cmd.CommandText = "DELETE FROM teachers WHERE teacherid=@id";
             cmd.Parameters.AddWithValue("@id",TeacherId);
             cmd.Prepare();
             cmd.ExecuteNonQuery();
             Conn.Close();
+        }
+
+        /// <summary>
+        /// Updates a teacher information on the MySQL Database. Non-Deterministic.
+        /// </summary>
+        /// <param name="TeacherInfo">An object with fields that map to the columns of the teachers table.</param>
+        /// <example>
+        /// POST api/TeacherData/UpdateTeacher/2 
+        /// FORM DATA / POST DATA / REQUEST BODY 
+        /// {
+        /// "TeacherId":"2",
+        ///	"TeacherFname":"Caitlin",
+        ///	"TeacherLname":"Cummings",
+        ///	"TeacherNumber":"T381"
+        ///	"TeacherSalary":"62.77"
+        ///	"Hiredate":"2014-06-10"
+        /// }
+        /// </example>
+        [HttpPost]
+        [Route("api/TeacherData/UpdateTeacher/{TeacherId}")]
+        [EnableCors(origins: "*", methods: "*", headers: "*")]
+        public void UpdateTeacher(int TeacherId, [FromBody] TeacherCourse UpdatedTeacher)
+        {
+            //Create an instance of a connection
+            MySqlConnection Conn = School.AccessDatabase();
+
+            //Debug.WriteLine(TeacherInfo.TeacherFname);
+
+            //Open the connection between the web server and database
+            Conn.Open();
+
+            //Establish a new command (query) for our database
+            MySqlCommand cmd = Conn.CreateCommand();
+
+            //SQL QUERY
+            cmd.CommandText = "update teachers set teacherfname=@teacherfname, teacherlname=@teacherlname, employeenumber=@employeenumber, salary=@salary  where teacherid=@id";
+            cmd.Parameters.AddWithValue("@teacherfname", UpdatedTeacher.TeacherFname);
+            cmd.Parameters.AddWithValue("@teacherlname", UpdatedTeacher.TeacherLname);
+            cmd.Parameters.AddWithValue("@employeenumber", UpdatedTeacher.TeacherNumber);
+            cmd.Parameters.AddWithValue("@salary", UpdatedTeacher.TeacherSalary);
+            cmd.Parameters.AddWithValue("@id", TeacherId);
+            cmd.Prepare();
+
+            cmd.ExecuteNonQuery();
+
+            Conn.Close();
+
+
         }
     }
 }
