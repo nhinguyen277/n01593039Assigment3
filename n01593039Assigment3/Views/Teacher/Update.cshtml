@@ -6,7 +6,7 @@
 <h2>Update A Teacher Information</h2>
 
 
-<form method="POST" action="/Teacher/UpdateInfo/@Model.TeacherId">
+<form method="POST" action="/Teacher/UpdateInfo/@Model.TeacherId" name="myForm" onsubmit="return validateForm()">
     <div class="inputrow">
         <label >First Name:</label>
         <input type="text" id="TeacherFname" name="TeacherFname" value="@Model.TeacherFname" />
@@ -37,4 +37,34 @@
         <input type="submit" value="Update Teacher" />
     </div>
 </form>
+<script>
+    function validateForm() {
+        let x = document.forms["myForm"]["TeacherFname"].value;
+        let y = document.forms["myForm"]["TeacherLname"].value;
+        let z = document.forms["myForm"]["TeacherNumber"].value;
+        let a = document.forms["myForm"]["TeacherSalary"].value;
+        let b = document.forms["myForm"]["Hiredate"].value;
+
+        if (x == "") {
+            alert("First Name must be filled out");
+            return false;
+        }
+        if (y == "") {
+            alert("Last Name must be filled out");
+            return false;
+        }
+        if (z == "") {
+            alert("Employee number must be filled out");
+            return false;
+        }
+        if (a == "") {
+            alert("Salary must be filled out");
+            return false;
+        }
+        if (b == "") {
+            alert("Hire date must be filled out");
+            return false;
+        }
+    }
+</script>
 

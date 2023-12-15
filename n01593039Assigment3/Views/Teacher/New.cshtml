@@ -5,7 +5,7 @@
 
 <h2>New Teacher</h2>
 
-<form method="POST" action="/Teacher/Create">
+<form method="POST" action="/Teacher/Create" name="myForm" onsubmit="return validateForm()">
     <div id="block">
         <label id="label">First Name</label>
         <input type="text" name="TeacherFname" />
@@ -31,4 +31,35 @@
     </div>
     <input type="submit" value="Add">
 </form>
+
+<script>
+    function validateForm() {
+        let x = document.forms["myForm"]["TeacherFname"].value;
+        let y = document.forms["myForm"]["TeacherLname"].value;
+        let z = document.forms["myForm"]["TeacherNumber"].value;
+        let a = document.forms["myForm"]["TeacherSalary"].value;
+        let b = document.forms["myForm"]["Hiredate"].value;
+
+  if (x == "") {
+    alert("First Name must be filled out");
+    return false;
+  }
+   if (y == "") {
+            alert("Last Name must be filled out");
+            return false;
+        }
+        if (z == "") {
+            alert("Employee number must be filled out");
+            return false;
+        }
+        if (a == "") {
+            alert("Salary must be filled out");
+            return false;
+        }
+        if (b == "") {
+            alert("Hire date must be filled out");
+            return false;
+        }
+}
+</script>
 
